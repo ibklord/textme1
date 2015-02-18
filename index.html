@@ -1,0 +1,1188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Mobile Text NG</title>
+<style type="text/css">
+<!--
+body {
+	background-image: url(media/body-tail.gif);
+	background-color: #e7e7e7;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+-->
+.bgmenu{
+	font-weight: bold;
+	padding-left: 3px;
+	padding-bottom: 3px;
+	padding-top: 3px;
+	padding-right: 3px;
+	text-transform:capitalize;
+	cursor: pointer;
+	background:url(media/arr.jpg) right center no-repeat #FFCC99;
+	border: #000000 thin solid;
+}
+.bgm{
+	border: #666666 solid thin;
+	overflow: auto;
+}
+
+input, select,textarea{
+	color:#003300;
+	width: 97%;
+	border:  #666666 thin solid;
+}
+
+input[type=button] {
+	background-color: #FFFFCC;
+	width: 98%;
+	padding: 5px;
+	border:thin  #333333 solid;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+
+.style1 {
+	font-size: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.style4 {
+	color: #333333;
+	font-weight: bold;
+	font-size: 14px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+.style8 {color: #0033FF;
+	font-style: italic;
+}
+.style2 {	color: #000099;
+	font-weight: bold;
+}
+.style13 {font-size: 10px}
+.style17 {color: #0000CC}
+</style>
+<script src="js/jquery.js"></script>
+<script src="js/jquery.easing.1.3.js"></script>
+<script src="js/jquery-migrate-1.1.1.js"></script>
+<script src="cordova.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+
+var listphones="";
+
+    // Cordova is ready
+    //
+	function onLoad() {
+			document.addEventListener("deviceready", onDeviceReady, false);			
+			
+		}
+	
+	
+    function onDeviceReady() {
+	       // create a new contact
+       //var contact = navigator.contacts.create();  
+        // search contacts, returning display name and phone numbers
+        var options = new ContactFindOptions();
+        options.filter="";
+        filter = ["displayName","phoneNumbers"];	
+        navigator.contacts.find(filter, onSuccess, onError, options);
+		alert('here');		
+    }
+
+    // onSuccess: Get a snapshot of the current contacts
+    //
+    function onSuccess(contacts) {
+			var phonenames = new Array();
+			var phonenos= new Array();
+			
+        for (var i=0; i<contacts.length; i++) {
+            // display phone numbers
+			phonenames[i]=contacts[i].displayName;
+			
+            for (var j=0; j<contacts[i].phoneNumbers.length; j++) {              
+				if(contacts[i].phoneNumbers[j].pref==true){
+					phonenos[i]=contacts[i].phoneNumbers[j].value;
+					listphones=listphones+"<option value="+ phonenos[i] + ">"+ phonenames[i]+"</option>";
+				}
+						
+            }
+        }
+		//alert("Connected to contacts!");
+		var cmplist="<select name='phonecontact' id='phonecontact' multiple='multiple' size='3'>"+listphones+"</select>";
+		document.getElementById('phonegroup').innerHTML=cmplist;
+		document.getElementById('loadme').style.display="none";
+		document.getElementById('menulogin').style.display="block";
+		document.getElementById('logindiv').style.display="block";
+		document.getElementById('menunew').style.display="block";
+		
+    };
+
+    // onError: Failed to get the contacts
+    //
+    function onError(contactError) {
+        alert('onError!');
+    }
+
+</script>
+
+	 
+</head>
+
+<body  onload="onLoad()">
+<table width="95%" border="0" align="center">
+  <tr>
+    <td><div id="banner">
+      <div align="center"><img src="media/header.png" width="80%" height="10%" /><br />
+          <span class="style4"><span class="style17">Unlimited SMS On Mobile</span></span><br />
+		  <div id="loadme" style=" background-color:#FF0000; color:#FFFFFF"><h3>Starting App...</h3></div>
+        </div>
+    </div>	
+	
+	
+	
+	<br />
+	<div id="menulogin" class="bgmenu" onclick="showm('mna')" style="display:none">Log in</div>
+	<div id="logindiv"  class="bgm" style="display:none" >	
+	
+	  <form id="form1" name="form1" method="get" action="">
+	    <table width="100%" border="0">
+          <tr>
+            <td>Username</td>
+          </tr>
+          <tr>
+            <td><input name="uname" type="text" id="uname" /></td>
+          </tr>
+          <tr>
+            <td>Password</td>
+          </tr>
+          <tr>
+            <td><input name="pass" type="password" id="pass" /></td>
+          </tr>
+          <tr>
+            <td><div align="center">
+              <input name="btlog" type="button" id="btlog" onclick="login()" value="Log in" />
+            </div></td>
+          </tr>
+        </table>
+        </form>
+	  </div>
+	<div id="menunew" class="bgmenu" onclick="showm('mnb')" style="display: none">New User? Click Here </div>
+	<div id="newdiv" class="bgm" style="display:none">	
+	
+	<form id="form1" name="form1" method="post" action="signup1.php">
+	  <table width="100%" border="0">
+              <tr>
+                <td><strong>Full Name: </strong></td>
+              </tr>
+              <tr>
+                <td><input name="fname" type="text" id="fname" /></td>
+              </tr>
+              <tr>
+                <td><strong>Sex:</strong></td>
+              </tr>
+              <tr>
+                <td><select name="sex" id="sex">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select></td>
+              </tr>
+              <tr>
+                <td><strong>State:</strong></td>
+              </tr>
+              <tr>
+                <td><select name="state" id="state">
+                  <option value="Abia">Abia</option>
+                  <option value="Abuja">Abuja</option>
+                  <option value="Adamawa">Adamawa</option>
+                  <option value="Akwa Ibom">Akwa Ibom</option>
+                  <option value="Anambra">Anambra</option>
+                  <option value="Bauchi">Bauchi</option>
+                  <option value="Bayelsa">Bayelsa</option>
+                  <option value="Benue">Benue</option>
+                  <option value="Borno">Borno</option>
+                  <option value="Cross River">Cross River</option>
+                  <option value="Delta">Delta</option>
+                  <option value="Ebonyi">Ebonyi</option>
+                  <option value="Edo">Edo</option>
+                  <option value="Ekiti">Ekiti</option>
+                  <option value="Enugu">Enugu</option>
+                  <option value="Gombe">Gombe</option>
+                  <option value="Imo">Imo</option>
+                  <option value="Jigawa">Jigawa</option>
+                  <option value="Kaduna">Kaduna</option>
+                  <option value="Kano">Kano</option>
+                  <option value="Katsina">Katsina</option>
+                  <option value="Kebbi">Kebbi</option>
+                  <option value="Kogi">Kogi</option>
+                  <option value="Kwara">Kwara</option>
+                  <option value="Lagos">Lagos</option>
+                  <option value="Nasarawa">Nasarawa</option>
+                  <option value="Niger">Niger</option>
+                  <option value="Ogun">Ogun</option>
+                  <option value="Ondo">Ondo</option>
+                  <option value="Osun">Osun</option>
+                  <option value="Oyo">Oyo</option>
+                  <option value="Plateau">Plateau</option>
+                  <option value="Rivers">Rivers</option>
+                  <option value="Sokoto">Sokoto</option>
+                  <option value="Taraba">Taraba</option>
+                  <option value="Yobe">Yobe</option>
+                  <option value="Zamfara">Zamfara</option>
+                </select></td>
+              </tr>
+              <tr>
+                <td><strong>E-mail:</strong></td>
+              </tr>
+              <tr>
+                <td><input name="email1" type="text" id="email1" /></td>
+              </tr>
+              <tr>
+                <td><strong>Phone:</strong></td>
+              </tr>
+              <tr>
+                <td><input name="phone" type="text" id="phone" onKeyPress="return isNumber(event)" />
+                <br />
+                <span class="style1">e.g. 08135534866</span> </td>
+              </tr>
+              <tr>
+                <td><strong>Username:</strong></td>
+              </tr>
+              <tr>
+                <td><input name="uname2" type="text" id="uname2" /></td>
+              </tr>
+              <tr>
+                <td><strong>Password:</strong></td>
+              </tr>
+              <tr>
+                <td><input name="pass2" type="password" id="pass2" /></td>
+              </tr>
+              <tr>
+                <td><strong>Confirm Password: </strong></td>
+              </tr>
+              <tr>
+                <td><input name="cpass" type="password" id="cpass" /></td>
+              </tr>
+              <tr>
+                <td><input name="mbutton" type="button" class="button" id="mbutton"  onclick="signup()" value="Sign Up" /></td>
+              </tr>
+          </table>
+        </form>
+	</div>		
+		
+	<div id="ads"></div>
+	<div id="announce"></div>	
+	<div id="creditmenu" style="background-color: #000033; color:#FFFFFF; display:none; padding:3px">Your SMS Balance: </div>
+	<div id="menu1" class="bgmenu" onclick="showmenu(0)" style="display:none">Send SMS </div>
+	<div class="bgm" id="mnu0" style="display:none">
+	<br />
+	<form id="form1" name="form1" method="post" action="">
+
+  <table width="100%" border="0">
+
+    <tr>
+
+      <td width="100%" bgcolor="#FFFFCC"></td>
+    </tr>
+
+    <tr>
+
+      <td bgcolor="#FFFFFF"><strong>Select Contacts From Phone</strong> </td>
+    </tr>
+
+    <tr>
+
+      <td bgcolor="#FFFFFF">     
+	
+    <div id="phonegroup"></div>    
+    
+        <div align="center">
+          <input name="button3" type="button" id="button3" value="-Show contacts-" onClick="shownumberbox()" style="display:none" />
+        </div></td>
+    </tr>
+
+    <tr>
+
+      <td bgcolor="#FFFFFF"><textarea name="smsto" cols="35" rows="3" id="smsto" style="display:none"></textarea>
+        <input name="cred" type="hidden" id="cred" value="" /></td>
+    </tr>
+
+    <tr>
+      <td bgcolor="#FFFFFF">Type phone numbers that are not in your contact below<br />
+        <span class="style13">(separate numbers with comma e.g 08139235588,08066550949) </span></td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFFF"><textarea name="moreto" cols="35" rows="3" id="moreto" onkeypress="this.value=this.value.replace(/[^\d,]/g,'')"></textarea></td>
+    </tr>
+    <tr>
+
+      <td bgcolor="#FFFFFF"><strong>From (Sender Name)</strong> </td>
+    </tr>
+
+    <tr>
+
+      <td bgcolor="#FFFFFF"><input name="smsfrom" type="text" id="smsfrom" maxlength="11" />
+
+        <input name="phone" type="hidden" id="phone" value="" />
+
+        <input name="no_pple" type="hidden" id="no_pple" />
+
+        <input name="smspage" type="hidden" id="smspage" />
+
+        <input name="send_to_group" type="hidden" id="send_to_group" /></td>
+    </tr>
+
+    <tr>
+
+      <td bgcolor="#FFFFFF"><strong>Message</strong></td>
+    </tr>
+
+    <tr>
+
+      <td bgcolor="#FFFFFF"><textarea name="smsmsg" cols="35" rows="5" id="smsmsg" onKeyDown="textCounter(document.getElementById('smsmsg'),160)"  onkeyup="textCounter(document.getElementById('smsmsg'),160)" ></textarea></td>
+    </tr>
+
+    <tr>
+
+      <td bgcolor="#FFFFFF"><div id="counter"></div>
+
+        <div>
+
+          <input name="schpick" type="checkbox" id="schpick" value="checkbox" onClick="showdt()" style="display:none" />
+        </div>
+
+        <div align="center">
+          <input name="sendsms" type="button" id="sendsms" onClick="sendmsg()" value="Send SMS" />
+        </div></td>
+    </tr>
+  </table>
+
+</form>
+	
+	</div>	
+	<div id="menu2" class="bgmenu" onclick="showmenu(1)" style="display:none">Invite Friends </div>
+	<div class="bgm" id="mnu1" style="display:none"><br />
+	  Get 5 FREE SMS when your friends register on Mobile Text NG.<br />
+	  <form id="form2" name="form2" method="post" action="">
+	    <strong>Enter Friend's Phone No (e.g 08139170491):</strong><br />
+	    <input name="fphone" type="text" id="fphone" onKeyPress="return isNumber(event)" maxlength="11"/> 
+                <br />
+	            <input name="btshare" type="button" id="btshare" value="Share" onclick="shareapp()"  />
+	  </form>
+	</div>
+	<div class="bgmenu" id="menu3" onclick="showmenu(2)" style="display:none">Buy SMS</div>
+	<div class="bgm" id="mnu2" style="display:none">	
+	  <p><strong><u>How To Buy SMS:</u></strong><br />
+	  
+	  You can buy SMS directly from Mobile Text NG or  its Distributors. We are constantly building a network of distributors nationwide.<br /> 
+	  <br />
+	  At Mobile Text NG  SMS is at N1.60kobo.<br />
+	  1 SMS Credit = 1 unit = 160 Characters = N1.60kobo.<br />
+	  Minimum Purchase is N500 = 312 SMS credits. </p>
+	  <p><strong><u>How To Pay To Mobile Text NG:</u></strong><span class="wrap-col"><span style="display:block">
+	      Payment via bank deposit, Internet Bank Transfer or Quickteller to any of these accounts;</span><strong><span style="display:block"><br />
+	      ACCOUNT NAME: IBK Information Technology<br />
+	      ACCOUNT NO: 0109012060<br />
+	      BANK: GTB<br />
+	      <br />
+	      ACCOUNT NAME: Oluwatosin Lawal<br />
+	      ACCOUNT NO: 3075322909 <br />
+	      BANK: First Bank <br />
+	      </span></strong><br />
+	      After payment, send details to 08135534866 OR contact us <a onclick="showmenu(4)" href="#">here</a> in this format; <span class="style8"><span style="display:block"> Date, Username, phone no, Transaction detail or Teller No, Amount, service<br />
+          e.g. 17/03/2015, xpella, 08139235588, 12943, 2600, Bulk SMS </span></span></span></p>
+	  <p>Your SMS account will be credited immediately your payment is confirmed.<br />
+	    <br />
+	  </p>
+	</div>
+	<div id="menu4" class="bgmenu" onclick="showmenu(3)" style="display:none">SMS History </div>
+	<div class="bgm" id="mnu3" style="display:none">
+	<form id="form4" name="form4" method="post" action="">
+	  <div align="center">
+	    <input type="button" name="Button" value="Refresh History" onclick="hist()" />
+	     </div>
+	</form>
+	<div id="hist"></div>
+
+	</div>
+	
+	
+	
+	<div id="menu5" class="bgmenu" onclick="showmenu(4)" style="display:none">Contact us </div>
+	<div class="bgm" id="mnu4" style="display:none">
+	  <form id="form3" name="form3" method="post" action="">
+	    <strong>Subject:</strong><br />
+	    <input name="subj" type="text" id="subj" />
+	    <br />
+	    <strong>Message:</strong><br />
+	    <textarea name="mess" id="mess"></textarea>
+	    <br />
+	    <input name="btsend" type="button" id="btsend" value="Send" onclick="sendcont()" />
+	  </form>
+	  
+	  <br />
+	</div>
+	<div id="menu6" class="bgmenu" onclick="logout()" style="display:none">Logout</div>
+	<div  id="aboutapp">
+	  <div align="center">
+	    <p><a href="tel:08135534866" style="text-decoration:none; color:#000000"><span class="style2">Click here to Call Mobile Text NG </span></a><br />
+	    </p>
+	    </div>
+	</div>	</td>
+  </tr>
+</table>
+<script language="javascript">
+////ajax
+var ajx;
+var ajx1;
+var ajx2;
+var ajx3;
+var ajx4;
+var ajx5;
+var ajx6;
+var ajx7;
+var ajxbool;
+var conn;
+var smspage=0;
+var b1;
+var c1;
+try{
+	ajx=new XMLHttpRequest();
+	ajx1=new XMLHttpRequest();
+	ajx2=new XMLHttpRequest();	
+	ajx3=new XMLHttpRequest();	
+	ajx4=new XMLHttpRequest();	
+	ajx5=new XMLHttpRequest();	
+	ajx6=new XMLHttpRequest();	
+	ajx7=new XMLHttpRequest();	
+	ajxbool=true;
+	//alert('Ajax');
+
+} catch(e){
+	ajx=new XDomainRequest();
+	ajx1=new XDomainRequest();
+	ajx2=new XDomainRequest();
+	ajx3=new XDomainRequest();
+	ajx4=new XDomainRequest();
+	ajx5=new XDomainRequest();
+	ajx6=new XDomainRequest();
+	ajx7=new XDomainRequest();
+	conn=new ActiveXObject("Microsoft.XMLHTTP");
+	//alert('Ajax');
+	ajxbool=true;
+
+}
+/////ajax
+
+
+///user variables
+var username;
+var smsbal=0;
+var fname;
+var userphone;
+var useremail;
+//document.getElementById('send_to_group').value="";
+var loggedin=0;
+var selphones;
+var scont=0;
+
+///user variables
+
+
+//menu variables
+var menuarr=new Array();
+menuarr[0]=0;
+menuarr[1]=0;
+menuarr[2]=0;
+menuarr[3]=0;
+menuarr[4]=0;
+
+
+//
+
+
+mna=1;
+mnb=0;
+
+hidemenus();
+document.getElementById('menulogin').style.display="none";
+//loadcontacts();
+
+function hidemenus(){
+	document.getElementById('menu1').style.display="none";
+	document.getElementById('mnu0').style.display="none";
+	document.getElementById('menu2').style.display="none";
+	document.getElementById('mnu1').style.display="none";
+	document.getElementById('menu3').style.display="none";
+	document.getElementById('mnu2').style.display="none";
+	document.getElementById('menu4').style.display="none";
+	document.getElementById('mnu3').style.display="none";
+	document.getElementById('menu5').style.display="none";	
+	document.getElementById('mnu4').style.display="none";	
+	document.getElementById('menu6').style.display="none";	
+	document.getElementById('creditmenu').style.display="none";	
+	document.getElementById('ads').style.display="none";	
+	document.getElementById('announce').style.display="none";	
+}
+	
+function showm(hu){
+	$("#logindiv").toggle("1000");
+	$("#newdiv").toggle("1000");
+	if(hu=="mnb"){
+		document.getElementById('uname2').focus();
+		$("#menulogin").toggle("1000");	
+	}
+	else if(hu=="mna"){
+		document.getElementById('uname').focus();
+		$("#menulogin").toggle("1000");			
+	}
+	
+}
+
+
+function login(){
+	
+	if(document.getElementById('uname').value=="" ){
+			alert("Empty username.");
+			exit
+		}
+		
+		if(document.getElementById('pass').value==""){
+			alert("Enter password.");
+			exit;
+		}
+		document.getElementById('btlog').value="Please wait..";	
+			
+		var code="?uname=" + document.getElementById('uname').value + "&pass="+ document.getElementById('pass').value;
+		var pga="http://mobiletextng.com/moblogin.php" + code;		
+		ajx.open ("GET",pga,true);			
+				ajx.onreadystatechange=function(){						
+
+			if(ajx.readyState==4){	
+				var resp;
+				var respa=new Array();
+				//ajx status				
+					resp=ajx.responseText;
+					respa=resp.split("|");
+					var resp1=respa[0];
+					var resp2=respa[1];
+					var resp3=respa[2];
+					var resp4=respa[3];
+					var resp5=respa[4];
+					
+					if(resp1=="yes"){
+						username=document.getElementById('uname').value;
+						document.getElementById('uname').value="";
+						document.getElementById('pass').value="";
+						fname=resp2;
+						smsbal=resp3;
+						userphone=resp4;
+						useremail=resp5;
+						document.getElementById('phone').value=userphone;
+						document.getElementById('cred').value=smsbal;
+						//document.getElementById('email').value=useremail;
+						//alert("ashgjComment sent successfully!");						
+						document.getElementById('menulogin').style.display="none";	
+						document.getElementById('logindiv').style.display="none";	
+						document.getElementById('menunew').style.display="none";	
+						document.getElementById('newdiv').style.display="none";	
+						document.getElementById('creditmenu').innerHTML="Welcome, " + fname + "<br><b>SMS Balance:</b> "+smsbal ;
+						loggedin=1;						
+						resetmenus();						
+						showmainmenus();
+					}
+					else{
+						if(resp1!=""){ 
+							if(resp1=="no"){
+								alert(resp2);
+							}
+							else{
+								alert('Problem connecting with server!');
+							}
+						}
+						else{
+							alert('Connection error!');
+							//alert(resp);
+						}
+					}					
+				document.getElementById('btlog').value="Log in";				
+			}						
+		}		
+			
+		ajx.send(null);
+}
+
+
+function showmainmenus(){
+	document.getElementById('menu1').style.display="block";
+	document.getElementById('mnu0').style.display="none";
+	document.getElementById('menu2').style.display="block";
+	document.getElementById('mnu1').style.display="none";
+	document.getElementById('menu3').style.display="block";
+	document.getElementById('mnu2').style.display="none";
+	document.getElementById('menu4').style.display="block";
+	document.getElementById('mnu3').style.display="none";
+	document.getElementById('menu5').style.display="block";	
+	document.getElementById('mnu4').style.display="none";
+	document.getElementById('menu6').style.display="block";	
+	document.getElementById('creditmenu').style.display="block";	
+	document.getElementById('ads').style.display="block";	
+	document.getElementById('announce').style.display="block";
+
+}
+
+
+
+function signup(){
+
+	var fname=document.getElementById('fname').value;
+
+	var email=document.getElementById('email1').value;
+
+	var phone=document.getElementById('phone').value;
+
+	var uname=document.getElementById('uname2').value;
+
+	var pass=document.getElementById('pass2').value;
+
+	var cpass=document.getElementById('cpass').value;
+
+	
+
+	if (fname==""){
+		alert ('Enter your full name.');
+		exit;
+
+	}
+
+	if (email==""){
+		alert ('Enter your email.');
+		exit;
+
+	}
+
+	var atpos=email.indexOf("@");
+	var dotpos=email.lastIndexOf(".");
+
+	if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length)
+		{
+  			alert('Invalid e-mail address.');  		
+			exit;
+
+  		}
+
+	
+	if((phone.substring(6,10)=="00000") || (phone.length<11)){
+		//alert(ph.substring(0,5));
+			alert ("Invalid phone number.");
+			exit;
+		}
+
+	if (uname==""){
+		alert ('Enter username.');
+		exit;
+	}
+
+
+	if (pass==""){
+		alert ('Enter password.');
+		exit;
+	}
+
+	if (pass!=cpass){
+		alert ('Password does not match!');
+		exit;
+	}
+
+	document.getElementById('mbutton').value="Please wait..";	
+	var code="?uname=" + uname + "&pass="+ pass+ "&fname="+ fname+ "&phone="+ phone+ "&email="+ email+ "&sex="+ sex+ "&state="+ state;
+		var pga="http://mobiletextng.com/mobsignup.php" + code;		
+		ajx1.open ("GET",pga,true);			
+				ajx1.onreadystatechange=function(){
+						
+
+			if(ajx1.readyState==4){	
+				var resp;
+				var respa=new Array();
+				//ajx status				
+					resp=ajx1.responseText;
+					respa=resp.split("|");
+					var resp1=respa[0];
+					var resp2=respa[1];					
+					
+					if(resp1=="yes"){
+						document.getElementById('fname').value="";
+						document.getElementById('phone').value="";
+						document.getElementById('email1').value="";
+						document.getElementById('uname2').value="";
+						document.getElementById('pass2').value="";
+						document.getElementById('cpass').value="";						
+						showm('mna');
+						alert(resp2);						
+						
+					}
+					else{
+						if(resp1!=""){ 
+							alert(resp1);
+						}
+						else{
+							alert('Connection error!');
+							//alert(resp);
+						}
+					}					
+				document.getElementById('mbutton').value="Sign up";				
+			}						
+		}		
+			
+		ajx1.send(null);	
+	
+
+}
+
+
+
+
+function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+
+        return false;
+
+    }
+    return true;
+}
+
+
+function logout(){
+	hidemenus();
+	document.getElementById('menulogin').style.display="none";	
+	document.getElementById('logindiv').style.display="block";	
+	document.getElementById('menunew').style.display="block";	
+	document.getElementById('newdiv').style.display="none";
+	//document.getElementById('send_to_group').value="";
+	document.getElementById('targetno').value=0;
+	document.getElementById('smsmsg').value="";
+	document.getElementById('smsfrom').value="";
+	//document.getElementById('send_to_group').value="";
+	document.getElementById('hist').innerHTML="";
+	loggedin=0;
+	resetmenus();
+	uncheckall();
+}
+
+
+function textCounter(field,maxlimit) {
+
+var j=field.value.length-maxlimit;
+
+if (field.value.length<maxlimit){
+
+	smspage=1;
+
+	b1=field.value.length;
+
+}
+
+else{
+
+var h=field.value.length / maxlimit;
+
+smspage=Math.ceil(h);
+
+var g=smspage-1;
+
+b1=field.value.length-(g*maxlimit);
+
+}
+
+c1='Page ' + smspage + ' /' + b1 + ' Characters';
+document.getElementById('counter').innerHTML= c1;
+
+}
+
+
+function gsel(){
+	var ags=document.getElementById('pgroup').value;
+	if (ags!="-Select-"){
+		document.getElementById('send_to_group').value=1;
+
+	}
+	else{
+		document.getElementById('send_to_group').value="";
+
+	}
+}
+
+
+function sendmsg(){
+		
+		selectedphonenos();
+		
+		
+		if (document.getElementById('moreto').value.length>=11){
+			if(selphones!=""){
+				selphones=selphones+","+document.getElementById('moreto').value;
+			}
+			else{
+				selphones=document.getElementById('moreto').value;
+			}
+			
+		}
+		
+		document.getElementById('smsto').value=selphones;
+		
+		
+		if(document.getElementById('smsto').value==""){
+
+			alert("No phone number selected!" +selphones);
+
+			exit;
+
+		}
+
+		else{
+
+			document.getElementById('smspage').value=smspage;
+
+		}
+
+		
+
+		if(document.getElementById('smsto').value!=""){
+
+			var abj= document.getElementById('smsto').value;
+
+			var aCars = abj.split(',');
+
+			if ((document.getElementById('cred').value==0) || (document.getElementById('cred').value<aCars.length) || (smspage>document.		getElementById('cred').value) ){	
+
+				alert ("Insufficient SMS units.\nNo of Pages: " + smspage + "\nReceipients: " + aCars.length + "\nAvailable SMS: " + document.getElementById('cred').value );
+				exit;
+
+			}	
+
+			else{
+
+				document.getElementById('no_pple').value=aCars.length;
+
+				document.getElementById('smspage').value=smspage;	
+
+			}
+
+		}
+
+		
+
+			if ((document.getElementById('smsfrom').value=="") || (document.getElementById('smsmsg').value=="")){
+
+			alert ("Enter Sender's ID and message.");
+
+			exit;
+
+			}
+
+
+			document.getElementById('sendsms').value="Sending...";
+			var coded="";
+			
+		var pga="http://mobiletextng.com/mobsendbulksms.php"+"?uname=" + encodeURIComponent(username)+ "&smsfrom="+ encodeURIComponent(document.getElementById('smsfrom').value)+"&smsmsg="+encodeURIComponent(document.getElementById('smsmsg').value)+"&smsto="+encodeURIComponent(document.getElementById('smsto').value)+"&idm="+ encodeURIComponent(Math.floor((Math.random() * 1000) + 1));			
+		ajx7.open ("POST",pga,true);	
+						
+				ajx7.onreadystatechange=function(){						
+
+			if(ajx7.readyState==4){	
+				var resp;
+				var respa=new Array();
+				//ajx status				
+					resp=ajx7.responseText;
+					respa=resp.split("|");
+					var resp1=respa[0];
+					var resp2=respa[1];
+					
+					
+					if(resp1=="1"){
+						document.getElementById('smsmsg').value="";
+						document.getElementById('smsfrom').value="";
+						//document.getElementById('phonegroup1').style.display="none";						
+						document.getElementById('moreto').value="";
+						//clear phone group variable
+						selphones="";						
+						var resp3=respa[2];
+						smsbal=resp3;						
+						document.getElementById('cred').value=smsbal;						
+						document.getElementById('creditmenu').innerHTML="Welcome, " + fname + "<br><b>SMS Balance:</b> "+smsbal ;	
+						uncheckall();					
+						alert(resp2);							
+										
+					}
+					else{
+						if(resp1!=""){ 
+							alert(resp);
+						}
+						else{
+							alert('Connection error!');
+							//alert(resp);
+						}
+					}					
+				document.getElementById('sendsms').value="Send SMS";				
+				selphones="";
+			}						
+		}					
+		ajx7.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		ajx7.send();						
+		
+
+}
+
+
+
+
+
+function showmenu(mno){
+	//alert('dfsdf');
+	var mdiv="#mnu"+mno;
+	var mdv;
+
+	if(menuarr[mno]==1){
+		menuarr[mno]=0;
+	}
+	else{
+		menuarr[mno]=1;
+	}
+	$(mdiv).toggle("100");
+	
+	
+	for(var j=0; j<=4;j++){
+		if(j!=mno){
+			if(menuarr[j]==1){
+				mdv="#mnu"+j;
+				$(mdv).toggle("100");				
+				menuarr[j]=0;
+			}
+		}
+			
+	}		
+
+	
+}
+
+function shareapp(){
+	var fphone=document.getElementById('fphone').value;
+	
+	if(document.getElementById('fphone').value==""){
+		alert("Enter friend's number");
+		exit;
+	}
+	if((fphone.substring(6,10)=="00000") || (fphone.length<11)){
+			//alert(ph.substring(0,5));
+			alert ("Invalid phone number.");
+			exit;
+		}
+	
+	
+	document.getElementById('btshare').value="Please wait..";	
+	var code="?fphone=" + fphone+"&userphone="+userphone+"&fname="+fname+"&id="+ Math.floor((Math.random() * 1000) + 1) ;
+		var pga="http://mobiletextng.com/mobshare.php" + code;		
+		ajx4.open ("GET",pga,true);			
+				ajx4.onreadystatechange=function(){						
+
+			if(ajx4.readyState==4){	
+				var resp;
+				var respa=new Array();
+				//ajx status				
+					resp=ajx4.responseText;
+					respa=resp.split("|");
+					var resp1=respa[0];
+					var resp2=respa[1];					
+					
+					if(resp1=="1"){
+						document.getElementById('fphone').value="";					
+						alert(resp2);			
+						
+					}
+					else{
+						if(resp1!=""){ 
+							alert(resp2);
+						}
+						else{
+							alert('Connection error!');
+							//alert(resp);
+						}
+					}					
+				document.getElementById('btshare').value="Share";				
+			}						
+		}		
+			
+		ajx4.send(null);	
+	
+	
+	
+	
+	
+}
+
+function sendcont(){
+	if(document.getElementById('subj').value=="" || document.getElementById('subj').value.length<=3){
+		alert('Enter subject');
+		exit;
+	}
+	if(document.getElementById('mess').value=="" || document.getElementById('mess').value.length<=3){
+		alert('Enter Message');
+		exit;
+	}
+
+	document.getElementById('btsend').value="Please wait..";	
+	var code="?userphone="+userphone+"&subj="+document.getElementById('subj').value+"&mess="+document.getElementById('mess').value ;
+		var pga="http://mobiletextng.com/mobcontact.php" + code;		
+		ajx5.open ("GET",pga,true);			
+				ajx5.onreadystatechange=function(){						
+
+			if(ajx5.readyState==4){	
+				var resp;
+				var respa=new Array();
+				//ajx status				
+					resp=ajx5.responseText;
+					respa=resp.split("|");
+					var resp1=respa[0];
+					var resp2=respa[1];					
+					
+					if(resp1=="1"){
+						document.getElementById('subj').value="";					
+						document.getElementById('mess').value="";					
+						alert(resp2);			
+						
+					}
+					else{
+						if(resp1!=""){ 
+							alert(resp2);
+						}
+						else{
+							alert('Connection error!');
+							//alert(resp);
+						}
+					}					
+				document.getElementById('btsend').value="Send";				
+			}						
+		}		
+			
+		ajx5.send(null);	
+
+}
+
+
+function resetmenus(){
+menuarr[0]=0;
+menuarr[1]=0;
+menuarr[2]=0;
+menuarr[3]=0;
+menuarr[4]=0;
+
+}
+
+function selectedphonenos() {	
+	var cof = document.getElementById('phonecontact');
+    var txt = "";
+	var tx;
+	var txt1;
+    var j;
+	
+    for (j = 0; j < cof.options.length; j++) {
+        if (cof.options[j].selected) {
+			tx  = cof.options[j].value;
+			//alert(tx);
+			tx=verifynos(tx);						           
+			txt=txt + "," +tx;
+        }
+    }
+	txt1=txt.substr(1);	
+	selphones=txt1;
+}
+
+function uncheckall(){
+var cof = document.getElementById('phonecontact');
+    var j;
+    for (j = 0; j < cof.options.length; j++) {
+        if (cof.options[j].selected) {
+			//cof[i].checked=false;
+			cof.options[j].selected = false;
+        }
+    }
+
+}
+
+
+function verifynos(x){
+	var x1=x.trim();
+	var x2=x1.replace(/\s/g,'');
+	var y=x2.substr(0,2);
+	var str = x2;
+	//var res = str.replace("+234", "0");
+	
+	if(y=="+2"){
+		res="0"+str.substr(4);	
+	}
+	else if(y=="23"){
+		res="0"+str.substr(3);	
+	}
+	else{
+		res=str;
+	}
+	return res;
+	
+}
+
+function hist(){
+	
+	document.getElementById('hist').innerHTML="Fetching..";	
+	var code="?uname="+username+"&id="+ Math.floor((Math.random() * 1000) + 1) ;
+		var pga="http://mobiletextng.com/mobhistory.php" + code;	
+			
+		ajx6.open ("GET",pga,true);			
+				ajx6.onreadystatechange=function(){						
+
+			if(ajx6.readyState==4){	
+				var resp;
+				var respa=new Array();
+				//ajx status				
+					resp=ajx6.responseText;
+					respa=resp.split("|");
+					var resp1=respa[0];
+					var resp2=respa[1];					
+					
+					if(resp1=="1"){
+						document.getElementById('hist').innerHTML=resp2;																		
+					}
+					else{
+						if(resp1!=""){ 
+							if(resp1=="2"){
+								document.getElementById('hist').innerHTML=resp2;
+							}
+							else{
+								document.getElementById('hist').innerHTML="Problem fetching!";
+							}
+							
+						}
+						else{
+							document.getElementById('hist').innerHTML=resp;
+							alert('Connection error!');
+							//alert(resp);
+						}
+					}					
+				//document.getElementById('btshare').value="Share";				
+			}						
+		}		
+			
+		ajx6.send(null);			
+	
+}
+
+//call loadphones here
+</script>
+</body>
+
+
+
+</html>
